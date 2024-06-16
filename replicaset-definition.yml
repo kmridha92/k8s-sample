@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-replicaset
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+
+# Create a replicaset
+# kubectl create -f replicaset-definition.yml
+
+# Update the replicaset
+# kubectl replace -f replicaset-definition.yml
+# kubectl scale --replicas=6 -f replicaset-definition.yml
+
+# Delete a replicaset
+# kubectl delete replicaset myapp-replicaset
+
+# Get replicaset
+# kubectl get replicaset

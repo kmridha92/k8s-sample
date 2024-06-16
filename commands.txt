@@ -1,0 +1,85 @@
+docker build --> to build image of app
+docker run --> to run image on a container
+
+kubectl run --replicas=1000 my-web-server
+kubectl scale --replicas=2000 my-web-server
+kubectl rolling-update my-web-server --image=web-server:2
+kubectl rolling-update my-web-server --rollback
+kubectl get nodes
+kubectl run nginx --image=nginx
+kubectl get pods
+
+Kubernetes Cluster
+- Control Plane (Master)
+  - kube-apiserver
+  - etcd
+  - kube-scheduler
+  - controller-manager
+- Worker
+  - kubelet
+  - kube-proxy
+  - container runtime
+    - docker
+    - containerd
+
+pod - smallest unit in k8s
+  - main container to host app
+  - sidecar container for collecting logs
+
+Imperative and Declarative
+
+pod-definition.yml
+ - apiVersion
+ - kind
+ - metadata
+ - spec
+
+pod-definition.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+
+# Deploy commands for yml file
+kubectl create -f pod-definition.yml
+kubectl get pods
+kubectl describe pod myapp-pod
+
+
+Service
+  - ClusterIP
+  - NodePort
+  - LoadBalancer
+
+Microservices
+docker run -d --name=redis redis
+docker run -d --name=db postgres:9.4
+docker run -d --name=vote -p 5000:80 voting-app
+docker run -d --name=result -p 5001:80 result-app
+docker run -d --name=worker worker
+
+Microservices - linked
+docker run -d --name=redis redis
+docker run -d --name=db postgres:9.4
+docker run -d --name=vote -p 5000:80 --link redis:redis voting-app
+docker run -d --name=result -p 5001:80 --link db:db result-app
+docker run -d --name=worker --link redis:redis --link db:db worker
+
+Microservices on k8s
+1. Deploy pods
+2. Create Services (ClusterIP)
+  i. redis
+  ii. db
+3. Create Services (NodePort)
+  i. voting-app
+  ii. result-app
+
+minikube service voting-service --url
+minikube service result-service --url
